@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xxd \"C:/Users/rhksd/오픈소스/middle_prj/CLAUDE.md\")"
+    ]
+  }
+}

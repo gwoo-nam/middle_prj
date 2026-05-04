@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Test') {
+            steps {
+                sh '''
+                    set -o pipefail
+                    cd sample-app && python3 -m pytest test_app.py -v 2>&1 | tee ../pytest-output.txt
+                '''
+            }
+        }
+    }
+
+    post {
+        failure {
+            sh 'python3 claude-analyzer/analyzer.py pytest-output.txt sample-app/app.py'
+        }
+        success {
+            echo 'All tests passed.'
+        }
+    }
+}
