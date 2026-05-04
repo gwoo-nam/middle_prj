@@ -34,9 +34,18 @@ def main():
     """
 
     # 2. 제미나이 REST API 직접 호출 (구버전 패키지 충돌 우회)
+    # 2. 제미나이 REST API 직접 호출 (보안 헤더 방식 + 최신 v1 API)
     print("Gemini API(REST)로 분석을 요청합니다...")
-    gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
-    gemini_headers = {'Content-Type': 'application/json'}
+    
+    # 수정 1: URL에서 ?key= 부분을 완전히 삭제하고 최신 v1, gemini-2.0-flash를 사용합니다.
+    gemini_url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent"
+    
+    # 수정 2: API 키를 URL이 아닌 안전한 봉투(Header) 안에 숨겨서 보냅니다!
+    gemini_headers = {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': api_key
+    }
+    
     gemini_data = {
         "contents": [{
             "parts": [{"text": prompt}]
@@ -44,6 +53,7 @@ def main():
     }
 
     try:
+        # url, headers, json이 모두 잘 들어갔는지 확인합니다.
         res = requests.post(gemini_url, headers=gemini_headers, json=gemini_data)
         res.raise_for_status() # 에러 발생 시 바로 예외 처리로 던짐
         response_json = res.json()
