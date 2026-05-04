@@ -6,7 +6,7 @@ def calculate_average(numbers):
 def add(a, b):
     return a + b
 
-
+#emrkwk
 def get_user_name(user):
     # BUG: KeyError when "name" key is missing
     return user["name"]
