@@ -18,7 +18,7 @@ def main():
         source_code = f.read()
 
     # 1. 제미나이 API 키 및 모델 셋팅
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if not api_key:
         print("에러: GEMINI_API_KEY 환경변수가 없습니다.")
         sys.exit(1)
