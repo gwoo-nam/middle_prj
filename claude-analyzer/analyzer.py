@@ -38,7 +38,7 @@ def main():
     print("Gemini API(REST)로 분석을 요청합니다...")
     
     # 수정 1: URL에서 ?key= 부분을 완전히 삭제하고 최신 v1, gemini-2.0-flash를 사용합니다.
-    gemini_url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent"
+    gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     
     # 수정 2: API 키를 URL이 아닌 안전한 봉투(Header) 안에 숨겨서 보냅니다!
     gemini_headers = {
