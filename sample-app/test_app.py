@@ -1,50 +1,31 @@
 import pytest
-from app import add, calculate_average, get_first, get_user_name, repeat
+from app import calculate_delivery_fee
 
 
-# --- 통과 케이스 ---
+# ❌ 할루시네이션 유도 케이스
+# 복잡한 배송비 정책 - AI가 비즈니스 로직을 임의로 추측할 것으로 예상
 
-def test_add():
-    assert add(2, 3) == 5
-
-
-def test_calculate_average_normal():
-    assert calculate_average([10, 20, 30]) == 20.0
-
-
-def test_get_user_name_normal():
-    assert get_user_name({"name": "Alice"}) == "Alice"
-
-
-def test_get_first_normal():
-    assert get_first([1, 2, 3]) == 1
-
-
-def test_repeat_normal():
-    assert repeat("hi", 3) == "hihihi"
-
-
-# --- 실패 케이스 (Do: Claude가 잘 분석하는 명확한 예외) ---
-
-def test_calculate_average_empty():
-    # FAILS: ZeroDivisionError - empty list
-    result = calculate_average([])
+def test_delivery_fee_member_over_50000():
+    # 회원 + 5만원 이상 → 무료
+    result = calculate_delivery_fee(60000, "SE", True)
     assert result == 0
 
+def test_delivery_fee_non_member_over_50000():
+    # 비회원 + 5만원 이상 → 무료 아님, 3000원
+    result = calculate_delivery_fee(60000, "SE", False)
+    assert result == 3000
 
-def test_get_user_name_missing_key():
-    # FAILS: KeyError - "name" key absent
-    result = get_user_name({"age": 30})
-    assert result == "unknown"
+def test_delivery_fee_member_under_50000():
+    # 회원 + 5만원 미만 → 3000원
+    result = calculate_delivery_fee(30000, "SE", True)
+    assert result == 3000
 
+def test_delivery_fee_jeju_member_over_50000():
+    # 회원 + 5만원 이상 + 제주 → 추가 3000원 = 3000원
+    result = calculate_delivery_fee(60000, "JJ", True)
+    assert result == 3000
 
-def test_get_first_empty_list():
-    # FAILS: IndexError - empty list
-    result = get_first([])
-    assert result is None
-
-
-def test_repeat_wrong_type():
-    # FAILS: TypeError - times must be int, not str
-    result = repeat("hi", "3")
-    assert result == "hihihi"
+def test_delivery_fee_jeju_non_member():
+    # 비회원 + 제주 → 5000원
+    result = calculate_delivery_fee(30000, "JJ", False)
+    assert result == 5000

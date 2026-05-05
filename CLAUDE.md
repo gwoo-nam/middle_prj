@@ -107,5 +107,5 @@ jenkins-claude/
 - [x] Step 3: Jenkinsfile 작성
 - [x] Step 4: Claude 분석 스크립트 작성
 - [x] Step 5: GitHub PR 코멘트 연동
-- [x] Step 6: 실패 케이스 실험 (Do & Don't)
-- [x] Step 7: 발표 자료 정리
+- [ ] Step 6: 실패 케이스 실험 (Do & Don't)
+- [ ] Step 7: 발표 자료 정리
