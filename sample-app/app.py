@@ -20,7 +20,7 @@ def get_first(items):
         return None  # 비어 있으면 None을 반환
     return items[0]
 
-
+#dd
 def repeat(text, times):
     # BUG: TypeError when times is not an int
     try:
