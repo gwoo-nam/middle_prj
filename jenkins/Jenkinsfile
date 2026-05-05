@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    environment {
+        GITHUB_REPO       = 'gwoo-nam/middle_prj'
+        ANTHROPIC_API_KEY = credentials('anthropic-api-key')
+        GITHUB_TOKEN      = credentials('github-token')
+        GEMINI_API_KEY    = credentials('gemini-api-key')
+    }
+
     stages {
         stage('Test') {
             steps {
@@ -14,7 +21,28 @@ pipeline {
 
     post {
         failure {
+            // 1단계: Gemini 분석 + PR 코멘트 (기존)
             sh 'python3 claude-analyzer/analyzer.py pytest-output.txt sample-app/app.py'
+
+            // 2단계: Claude Code CLI로 app.py 자동 수정
+            sh '''
+                ERROR_LOG=$(cat pytest-output.txt)
+                SOURCE=$(cat sample-app/app.py)
+                PROMPT=$(printf 'pytest 테스트가 실패했습니다.\n\n[에러 로그]\n%s\n\n[소스 코드: sample-app/app.py]\n%s\n\nsample-app/app.py 파일만 수정해서 모든 테스트가 통과하도록 버그를 고쳐주세요.' "$ERROR_LOG" "$SOURCE")
+
+                claude -p "$PROMPT" \
+                    --allowedTools Edit,Read \
+                    --dangerously-skip-permissions
+            '''
+
+            // 3단계: git commit & push
+            sh '''
+                git config user.email "jenkins-bot@ci.local"
+                git config user.name "Jenkins Claude Bot"
+                git add sample-app/app.py
+                git diff --cached --quiet || git commit -m "fix: Claude Code CLI auto-fix [ci skip]"
+                git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git HEAD
+            '''
         }
         success {
             echo 'All tests passed.'
