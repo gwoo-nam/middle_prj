@@ -41,7 +41,7 @@ pipeline {
                 git config user.name "Jenkins Claude Bot"
                 git add sample-app/app.py
                 git diff --cached --quiet || git commit -m "fix: Claude Code CLI auto-fix [ci skip]"
-                git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git HEAD
+                git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git HEAD:refs/heads/fix/claude-auto-fix
             '''
         }
         success {
