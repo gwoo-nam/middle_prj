@@ -11,7 +11,7 @@ def add(a, b):
 def get_user_name(user):
     # BUG: KeyError when "name" key is missing
     # .get() 메서드를 사용하여 키가 없을 때 None을 반환하도록 수정
-    return user.get("name", "unknown")
+    return user.get("name", None)
 
 
 def get_first(items):
