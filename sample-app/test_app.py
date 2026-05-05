@@ -53,7 +53,6 @@ def test_get_sqrt_negative():
     result = get_sqrt(-4)
     assert result == 0
 
-
 # ✅ 성공 예상 케이스 3 - 중첩 딕셔너리 KeyError
 # AI가 .get() 체이닝으로 정확히 수정할 것으로 예상
 def test_get_city_missing():
